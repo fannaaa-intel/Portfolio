@@ -41,10 +41,10 @@ export const site = {
   resume: "/resume.pdf",
   availableForWork: true,
   availabilityBadge: "Available for work · Open 2026 · ",
-  url: "https://mark-reduca-portfolio.vercel.app", // update after deploy / custom domain
+  url: "https://mark-reduca-dev.vercel.app", // update after deploy / custom domain
   socials: [
     { label: "GitHub", href: "https://github.com/fannaaa-intel" },
-    // { label: "LinkedIn", href: "" },  // TODO: add in a future update
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/mark-reduca-b5951544b" },
   ] as SocialLink[],
 };
 

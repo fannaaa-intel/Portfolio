@@ -31,24 +31,22 @@ import { site, contact } from "../data/site";
     site.socials.length > 0 && (
       <ul class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-sm">
         {site.socials.map((social, i) => (
-          <>
+          <li class="flex items-center gap-6">
             {i > 0 && (
-              <li aria-hidden="true" class="text-muted">
+              <span aria-hidden="true" class="text-muted">
                 <Asterisk class="size-3" />
-              </li>
+              </span>
             )}
-            <li>
-              <a href={social.href} class="link-underline" target="_blank" rel="noopener noreferrer">
-                {social.label} <span aria-hidden="true" class="nudge nudge-ne">↗</span>
-                <span class="sr-only">(opens in a new tab)</span>
-              </a>
-            </li>
-          </>
+            <a href={social.href} class="link-underline" target="_blank" rel="noopener noreferrer">
+              {social.label} <span aria-hidden="true" class="nudge nudge-ne">↗</span>
+              <span class="sr-only">(opens in a new tab)</span>
+            </a>
+          </li>
         ))}
-        <li aria-hidden="true" class="text-muted">
-          <Asterisk class="size-3" />
-        </li>
-        <li>
+        <li class="flex items-center gap-6">
+          <span aria-hidden="true" class="text-muted">
+            <Asterisk class="size-3" />
+          </span>
           <a href={site.resume} class="link-underline" download="Mark_Reduca_CV.pdf">
             Résumé <span aria-hidden="true" class="nudge nudge-d">↓</span>
           </a>

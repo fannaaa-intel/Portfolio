@@ -4,7 +4,7 @@ Personal portfolio of **Mark George B. Reduca**, a full-stack developer from Cag
 A fast, minimalist, monochrome site with a "drafting table" look: thin borders, crop marks,
 dimension lines, outlined numerals and italic serif "hook" words mixed into sans headlines.
 
-**Live:** https://mark-reduca-portfolio.vercel.app (planned address, confirmed after the first Vercel deploy)
+**Live:** https://mark-reduca-dev.vercel.app (planned address, confirmed after the first Vercel deploy)
 
 ## Stack
 
@@ -117,9 +117,10 @@ Only one project should have `featured: true`; it gets the full-width card.
 
 1. Push this repo to GitHub.
 2. On [vercel.com](https://vercel.com) → **Add New… → Project** → import the repo.
-3. Vercel detects **Astro** automatically (build `npm run build`, output `dist`). Click **Deploy**.
-4. Every push to `main` redeploys. Pull requests get preview URLs.
-5. If the final URL differs from `site.url`, update it in `src/data/site.ts` and push.
+3. Set **Project Name** to `mark-reduca-dev` (gives `https://mark-reduca-dev.vercel.app`, matching `site.url`).
+4. Vercel detects **Astro** automatically (build `npm run build`, output `dist`). Click **Deploy**.
+5. Every push to `main` redeploys. Pull requests get preview URLs.
+6. If the final URL differs from `site.url`, update it in `src/data/site.ts` and push.
 
 **Custom domain:** Vercel project → **Settings → Domains** → add the domain, follow the DNS
 instructions, then update `site.url`.

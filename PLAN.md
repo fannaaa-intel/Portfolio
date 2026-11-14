@@ -165,7 +165,7 @@ export const site = {
   email: "reducamark1@gmail.com",
   resume: "/resume.pdf",
   availableForWork: true,
-  url: "https://mark-reduca-portfolio.vercel.app", // update after deploy / custom domain
+  url: "https://mark-reduca-dev.vercel.app", // update after deploy / custom domain
   socials: [
     { label: "GitHub", href: "https://github.com/fannaaa-intel" },
     // { label: "LinkedIn", href: "" },  // TODO: add in a future update
@@ -333,12 +333,12 @@ Stop after each step, summarize what was done, and wait for my "next".
 5. **Case study pages.** `/projects/[slug]` plus 404.
 6. **Polish.** Scroll reveals, hover states, mobile menu, favicon, OG image, sitemap and robots.txt.
 7. **QA.** Run `npm run build` with zero errors and zero TS warnings. Check at 360px, 768px and 1280px in both themes. Check keyboard navigation and reduced motion. Aim for 95+ on all Lighthouse scores.
-8. **README and deploy.** Write a README covering the stack, running locally, how to edit `site.ts`, how to add a project and how to deploy. Then walk me through pushing to GitHub (**`https://github.com/fannaaa-intel/Portfolio.git`**) and importing it to Vercel. Update `site.url` in `site.ts` and `site` in `astro.config.mjs` to the real Vercel URL.
+8. **README and deploy.** Write a README covering the stack, running locally, how to edit `site.ts`, how to add a project and how to deploy. Then walk me through pushing to GitHub (**`https://github.com/fannaaa-intel/Portfolio.git`**) and importing it to Vercel as project **`mark-reduca-dev`** (→ `https://mark-reduca-dev.vercel.app`). Update `site.url` in `site.ts` and `site` in `astro.config.mjs` to the real Vercel URL.
 
 ---
 
 ## 10. Future Updates (not now)
-- [ ] Add LinkedIn to `socials` in `site.ts`
+- [x] Add LinkedIn to `socials` in `site.ts` (done 2026-11-14)
 - [ ] Real project screenshots
 - [ ] Custom domain (e.g. `markreduca.dev`)
 - [ ] Contact form (Formspree or Resend)
