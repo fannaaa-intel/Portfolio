@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<BaseLayout title="Page not found" noindex>
+  <Nav />
+
+  <main id="main" class="container-page flex min-h-[calc(100svh-3.5rem-5.5rem)] flex-col justify-center py-20">
+    <div class="relative isolate">
+      <span
+        aria-hidden="true"
+        class="numeral-outline pointer-events-none absolute -top-16 right-0 -z-10 text-[8rem] md:-top-24 md:text-[16rem]"
+      >
+        404
+      </span>
+
+      <p class="mono-label"><span class="text-fg">404</span> / Not found</p>
+
+      <h1 class="mt-5 max-w-3xl text-[clamp(2.5rem,7vw,5rem)]">
+        404 — this page <em class="hook">wandered off</em>.
+      </h1>
+
+      <div class="dim mt-8 max-w-md">
+        <code data-path class="font-mono">route not found</code>
+      </div>
+
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href="/" class="btn btn-solid"><span aria-hidden="true" class="nudge nudge-l">←</span> Back home</a>
+        <a href="/#projects" class="btn">See projects</a>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  // Show the path the visitor tried, e.g. "/projectz"
+  const el = document.querySelector<HTMLElement>("[data-path]");
+  if (el && location.pathname !== "/404" && location.pathname !== "/404.html") {
+    el.textContent = location.pathname.length > 36 ? `${location.pathname.slice(0, 35)}…` : location.pathname;
+  }
+</script>

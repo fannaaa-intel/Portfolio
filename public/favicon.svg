@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .bg { fill: #fafafa; }
+    .fg { stroke: #0a0a0a; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0a0a0a; }
+      .fg { stroke: #fafafa; }
+    }
+  </style>
+  <rect class="bg" width="32" height="32" rx="3" />
+  <g class="fg" fill="none" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter">
+    <!-- M -->
+    <path d="M4.5 24V8.5l5.25 9 5.25-9V24" />
+    <!-- R -->
+    <path d="M19 24V8.5h4.25a3.9 3.9 0 0 1 0 7.8H19M23.5 16.3 28 24" />
+  </g>
+</svg>

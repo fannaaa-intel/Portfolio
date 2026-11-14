@@ -1,0 +1,39 @@
+---
+title: Ledgerly
+slug: ledgerly
+fullName: Ledgerly — OJT Budget Tracker
+summary: An offline budget app that shows OJT interns exactly where their allowance goes, from the daily commute to the total cost of their internship.
+hook: every peso, accounted for.
+tech: [React Native, Expo, TypeScript, SQLite]
+role: Solo developer
+year: 2026
+featured: false
+order: 2
+repo: https://github.com/fannaaa-intel/ojtBudgetTracker
+# cover: ../../assets/projects/ledgerly.png
+# coverAlt: Ledgerly home screen showing today's safe-to-spend amount
+status: Completed
+---
+
+## Problem
+
+Interns on on-the-job training live on a small allowance that goes to fares, food, rent and bills. Tracking that in a notebook or spreadsheet is tedious, so people stop doing it, and nobody knows what their OJT really costs.
+
+## Solution
+
+An offline Android app that makes logging an expense take a second or two, then turns those entries into budgets, alerts and a clear picture of the whole internship's cost. Everything stays on the phone.
+
+## What I built
+
+- **Fast logging:** one-tap meal presets, one-tap daily commute, expense and income forms with undo and full history
+- **Commute tools:** saved routes with live fares, an editable fare table, bulk fare updates after a fare hike and route comparison
+- **Budgets:** weekly and monthly envelopes with rollover, a "safe to spend today" figure and near / over-budget alerts
+- **OJT layer:** hours log, projected end date, cost per day and per hour, and a projected total cost
+- **Living costs:** rent and bills, an electricity estimator, roommate split, a grocery list with price memory, savings goals and an emergency fund
+- **Data:** reports, an OJT cost PDF, CSV export and JSON backup / restore
+- **App:** local reminders, PIN or fingerprint lock, Taglish or English labels, and light / dark / system themes
+- **Under the hood:** a local SQLite database (Drizzle ORM, 28 tables), Zustand for state and over 200 unit tests
+
+## Outcome
+
+Shipped as an installable Android APK, with over-the-air updates through EAS Update.

@@ -1,0 +1,78 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+---
+
+<button
+  type="button"
+  data-theme-toggle
+  class:list={[
+    "group inline-flex items-center gap-1 font-mono text-sm leading-none py-2 cursor-pointer",
+    className,
+  ]}
+>
+  <!-- Accessible name keeps the visible words: "Theme: light / dark, currently dark" -->
+  <span class="sr-only">Theme:</span>
+  <span class="text-fg dark:text-muted transition-colors">light</span>
+  <span aria-hidden="true" class="text-muted">/</span>
+  <span class="text-muted dark:text-fg transition-colors">dark</span>
+  <span class="sr-only" data-theme-state></span>
+</button>
+
+<script>
+  import { themeColors } from "../data/site";
+
+  type Theme = keyof typeof themeColors;
+
+  const root = document.documentElement;
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+  const current = (): Theme => (root.dataset.theme === "dark" ? "dark" : "light");
+
+  const stored = (): Theme | null => {
+    try {
+      const value = localStorage.getItem("theme");
+      return value === "light" || value === "dark" ? value : null;
+    } catch {
+      return null;
+    }
+  };
+
+  function apply(theme: Theme, persist: boolean) {
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+
+    // Keep the browser UI color in step with the chosen theme
+    document
+      .querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')
+      .forEach((meta) => (meta.content = themeColors[theme]));
+
+    document.querySelectorAll<HTMLElement>("[data-theme-state]").forEach((state) => {
+      state.textContent = `, currently ${theme}`;
+    });
+
+    if (persist) {
+      try {
+        localStorage.setItem("theme", theme);
+      } catch {
+        /* storage unavailable — theme still applies for this visit */
+      }
+    }
+  }
+
+  apply(current(), false);
+
+  document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      apply(current() === "dark" ? "light" : "dark", true);
+    });
+  });
+
+  // Follow the OS setting until the visitor picks a theme themselves
+  media.addEventListener("change", (event) => {
+    if (!stored()) apply(event.matches ? "dark" : "light", false);
+  });
+</script>

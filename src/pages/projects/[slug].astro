@@ -1,0 +1,171 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import Tag from "../../components/Tag.astro";
+import { pad } from "../../lib/hook";
+
+export const getStaticPaths = (async () => {
+  const projects = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+  return projects.map((project, i) => ({
+    params: { slug: project.data.slug },
+    props: { project, next: projects[(i + 1) % projects.length] },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  next: CollectionEntry<"projects">;
+}
+
+const { project, next } = Astro.props;
+const { title, fullName, summary, hook, tech, role, year, order, live, repo, cover, coverAlt, status } =
+  project.data;
+const { Content } = await render(project);
+const index = pad(order);
+---
+
+<BaseLayout title={`${title} case study`} description={summary} type="article">
+  <Nav />
+
+  <main id="main">
+    <!-- Header -->
+    <header class="container-page pt-10 pb-12 md:pt-16 md:pb-16">
+      <a href="/#projects" class="link-underline font-mono text-sm text-muted hover:text-fg">
+        <span aria-hidden="true" class="nudge nudge-l">←</span> All projects
+      </a>
+
+      <div class="relative isolate mt-12 md:mt-16">
+        <span
+          aria-hidden="true"
+          class="numeral-outline pointer-events-none absolute -top-10 right-0 -z-10 text-[7rem] md:-top-12 md:text-[12rem]"
+        >
+          {index}
+        </span>
+
+        <p class="mono-label">
+          <span class="text-fg">P/{index}</span> / Case study
+        </p>
+
+        <h1 class="mt-5 text-[clamp(2.5rem,7vw,5rem)]">
+          {title}{" "}
+          <span class="hook mt-2 block text-[0.62em] text-pretty text-muted">— {hook}</span>
+        </h1>
+
+        <p class="mono-label mt-6">{fullName}</p>
+        <p class="measure mt-6 text-xl leading-relaxed md:text-2xl">{summary}</p>
+      </div>
+    </header>
+
+    <!-- Cover -->
+    <div class="container-page">
+      <figure class="corners group">
+        {
+          cover ? (
+            <Image
+              src={cover}
+              alt={coverAlt ?? `${title} screenshot`}
+              widths={[640, 960, 1280, 1600]}
+              sizes="(min-width: 1200px) 1100px, 100vw"
+              loading="eager"
+              class="aspect-[16/9] w-full border border-border object-cover grayscale transition-[filter] duration-500 group-hover:grayscale-0"
+            />
+          ) : (
+            <div
+              role="img"
+              aria-label={`Screenshot of ${title} coming soon`}
+              class="bg-dots flex aspect-[16/9] flex-col items-center justify-center gap-2 border border-border bg-surface md:aspect-[21/9]"
+            >
+              <span class="font-mono text-base">{title.toLowerCase()}</span>
+              <span class="mono-label">screenshot coming soon</span>
+            </div>
+          )
+        }
+      </figure>
+    </div>
+
+    <!-- Body -->
+    <div class="container-page grid gap-12 py-16 md:py-24 lg:grid-cols-[16rem_1fr] lg:gap-20">
+      <aside class="lg:sticky lg:top-24 lg:h-fit" aria-label="Project details">
+        <dl class="divide-y divide-border border-y border-border font-mono text-sm">
+          <div class="grid grid-cols-[5rem_1fr] gap-3 py-3 lg:grid-cols-1 lg:gap-1">
+            <dt class="text-muted">Year</dt>
+            <dd>{year}</dd>
+          </div>
+          <div class="grid grid-cols-[5rem_1fr] gap-3 py-3 lg:grid-cols-1 lg:gap-1">
+            <dt class="text-muted">Role</dt>
+            <dd>{role}</dd>
+          </div>
+          <div class="grid grid-cols-[5rem_1fr] gap-3 py-3 lg:grid-cols-1 lg:gap-1">
+            <dt class="text-muted">Status</dt>
+            <dd class="flex items-center gap-2">
+              {status === "Live" && <span aria-hidden="true" class="pulse-dot inline-block size-1.5 rounded-full bg-fg" />}
+              {status}
+            </dd>
+          </div>
+          <div class="grid grid-cols-[5rem_1fr] gap-3 py-3 lg:grid-cols-1 lg:gap-2">
+            <dt class="text-muted">Stack</dt>
+            <dd>
+              <ul class="flex flex-wrap gap-2" aria-label="Tech used">
+                {
+                  tech.map((t) => (
+                    <li>
+                      <Tag label={t} icon />
+                    </li>
+                  ))
+                }
+              </ul>
+            </dd>
+          </div>
+        </dl>
+
+        {
+          (live || repo) && (
+            <div class="mt-6 flex flex-wrap gap-3">
+              {live && (
+                <a href={live} class="btn btn-solid" target="_blank" rel="noopener noreferrer">
+                  Live site <span aria-hidden="true" class="nudge nudge-ne">↗</span>
+                  <span class="sr-only">(opens in a new tab)</span>
+                </a>
+              )}
+              {repo && (
+                <a href={repo} class="btn" target="_blank" rel="noopener noreferrer">
+                  Code <span aria-hidden="true" class="nudge nudge-ne">↗</span>
+                  <span class="sr-only">(opens in a new tab)</span>
+                </a>
+              )}
+            </div>
+          )
+        }
+      </aside>
+
+      <article class="prose-case min-w-0">
+        <Content />
+      </article>
+    </div>
+
+    <!-- Next project -->
+    <nav aria-label="Next project" class="container-page pb-24">
+      <a
+        href={`/projects/${next.data.slug}`}
+        class="card-invert corners corners-hover group flex flex-col gap-6 border border-border p-6 md:flex-row md:items-end md:justify-between md:p-10"
+      >
+        <span>
+          <span class="mono-label block">Next project · P/{pad(next.data.order)}</span>
+          <span class="mt-3 block text-[clamp(2rem,5vw,3.5rem)] leading-tight font-semibold tracking-tight">
+            {next.data.title}
+            <span class="hook text-[0.7em] font-normal text-muted"> — {next.data.hook}</span>
+          </span>
+        </span>
+        <span class="font-mono text-sm whitespace-nowrap">
+          Read case study <span aria-hidden="true" class="nudge nudge-r">→</span>
+        </span>
+      </a>
+    </nav>
+  </main>
+
+  <Footer />
+</BaseLayout>

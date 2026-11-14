@@ -1,0 +1,41 @@
+---
+/**
+ * Circular text badge that slowly rotates around a drafting asterisk.
+ * `class` positions the badge (e.g. "absolute -bottom-10 -left-10").
+ * Stops rotating under prefers-reduced-motion.
+ */
+import Asterisk from "./Asterisk.astro";
+
+interface Props {
+  text: string;
+  label?: string;
+  class?: string;
+}
+
+const { text, label = text, class: className = "" } = Astro.props;
+const id = `badge-${Math.random().toString(36).slice(2, 8)}`;
+// Path radius 44 → circumference ≈ 276
+---
+
+<div role="img" aria-label={label} class={className}>
+  <div
+    class="relative grid size-28 place-items-center rounded-full border border-border bg-bg/85 text-fg backdrop-blur-sm md:size-32"
+  >
+    <svg viewBox="0 0 120 120" class="spin-slow absolute inset-0 size-full" aria-hidden="true">
+      <defs>
+        <path id={id} d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"></path>
+      </defs>
+      <text
+        font-family="var(--font-mono)"
+        font-size="10.5"
+        font-weight="500"
+        fill="currentColor"
+        textLength="274"
+        lengthAdjust="spacing"
+      >
+        <textPath href={`#${id}`}>{text.toUpperCase()}</textPath>
+      </text>
+    </svg>
+    <Asterisk class="size-6" />
+  </div>
+</div>

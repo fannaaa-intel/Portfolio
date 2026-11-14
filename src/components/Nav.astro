@@ -1,0 +1,124 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+import { site } from "../data/site";
+
+const links = [
+  { label: "About", href: "/#about" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Experience", href: "/#experience" },
+  { label: "Contact", href: "/#contact" },
+];
+---
+
+<header class="sticky top-0 z-50 border-b border-border bg-bg/75 backdrop-blur-md" data-nav>
+  <nav aria-label="Main" class="container-page flex h-14 items-center justify-between gap-4">
+    <a href="/#top" class="font-mono text-sm tracking-tight">{site.shortName}</a>
+
+    <div class="flex items-center gap-6">
+      <ul class="hidden items-center gap-6 md:flex">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                data-nav-link={link.href.split("#")[1]}
+                class="link-underline font-mono text-sm text-muted transition-colors hover:text-fg aria-[current=location]:bg-size-[100%_1px] aria-[current=location]:text-fg"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <span aria-hidden="true" class="hidden h-4 w-px bg-border md:block"></span>
+      <ThemeToggle />
+
+      <button
+        type="button"
+        class="cursor-pointer py-2 font-mono text-sm md:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-menu-button
+      >
+        <span data-menu-label>menu</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu panel -->
+  <div id="mobile-menu" hidden class="border-t border-border md:hidden" data-menu-panel>
+    <ul class="container-page divide-y divide-border py-2">
+      {
+        links.map((link, i) => (
+          <li>
+            <a href={link.href} class="flex items-baseline justify-between py-4 text-2xl tracking-tight" data-menu-link>
+              {link.label}
+              <span aria-hidden="true" class="mono-label">0{i + 1}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</header>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>("[data-menu-button]");
+  const panel = document.querySelector<HTMLElement>("[data-menu-panel]");
+  const label = document.querySelector<HTMLElement>("[data-menu-label]");
+
+  if (button && panel && label) {
+    const setOpen = (open: boolean) => {
+      button.setAttribute("aria-expanded", String(open));
+      panel.hidden = !open;
+      label.textContent = open ? "close" : "menu";
+    };
+
+    button.addEventListener("click", () => setOpen(button.getAttribute("aria-expanded") !== "true"));
+
+    panel.querySelectorAll("[data-menu-link]").forEach((link) => {
+      link.addEventListener("click", () => setOpen(false));
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !panel.hidden) {
+        setOpen(false);
+        button.focus();
+      }
+    });
+
+    // Highlight the nav link for the section in the middle of the screen (home page only)
+    const navLinks = document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]");
+    const sections = [...navLinks]
+      .map((link) => document.getElementById(link.dataset.navLink ?? ""))
+      .filter((section): section is HTMLElement => section !== null);
+
+    if (sections.length && "IntersectionObserver" in window) {
+      const setCurrent = (id: string | null) => {
+        navLinks.forEach((link) => {
+          if (link.dataset.navLink === id) link.setAttribute("aria-current", "location");
+          else link.removeAttribute("aria-current");
+        });
+      };
+      const spy = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) setCurrent(entry.target.id);
+            else if (entry.target.id === document.querySelector("[data-nav-link][aria-current]")?.getAttribute("data-nav-link")) {
+              // Leaving the current section without entering another (e.g. Stack, Hero)
+              setCurrent(null);
+            }
+          }
+        },
+        { rootMargin: "-45% 0px -50% 0px" },
+      );
+      sections.forEach((section) => spy.observe(section));
+    }
+
+    // Close if the viewport grows past the mobile breakpoint
+    window.matchMedia("(min-width: 768px)").addEventListener("change", (event) => {
+      if (event.matches) setOpen(false);
+    });
+  }
+</script>

@@ -1,0 +1,104 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import Tag from "./Tag.astro";
+import { pad } from "../lib/hook";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+
+const { project } = Astro.props;
+const { title, slug, summary, hook, tech, year, featured, order, live, repo, cover, coverAlt, status } =
+  project.data;
+const href = `/projects/${slug}`;
+---
+
+<article
+  class:list={[
+    "card-invert corners corners-hover group relative flex flex-col border border-border",
+    featured && "md:col-span-2 lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]",
+  ]}
+>
+  <!-- Screenshot or placeholder -->
+  <div class:list={["card-media p-3", featured && "lg:p-4"]}>
+    {
+      cover ? (
+        <Image
+          src={cover}
+          alt={coverAlt ?? `${title} screenshot`}
+          widths={[480, 720, 960, 1200]}
+          sizes={featured ? "(min-width: 768px) 600px, 100vw" : "(min-width: 768px) 560px, 100vw"}
+          class:list={[
+            "w-full border border-border object-cover grayscale transition-[filter] duration-500",
+            featured ? "aspect-[16/10] lg:h-full" : "aspect-[16/9]",
+          ]}
+        />
+      ) : (
+        <div
+          aria-hidden="true"
+          class:list={[
+            "bg-dots flex items-center justify-center border border-border",
+            featured ? "aspect-[16/10] lg:h-full" : "aspect-[16/9]",
+          ]}
+        >
+          <span class="font-mono text-sm tracking-wide text-muted">{title.toLowerCase()}</span>
+        </div>
+      )
+    }
+  </div>
+
+  <div class:list={["flex flex-1 flex-col p-6 pt-4", featured && "lg:p-10 lg:pl-6"]}>
+    <p class="mono-label flex items-center justify-between gap-3">
+      <span>P/{pad(order)}{featured && " · featured"}</span>
+      <span class="flex items-center gap-2">
+        {status === "Live" && <span aria-hidden="true" class="pulse-dot inline-block size-1.5 rounded-full bg-current" />}
+        {year} · {status}
+      </span>
+    </p>
+
+    <h3 class:list={["mt-4 tracking-tight", featured ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"]}>
+      <a
+        href={href}
+        class="after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-fg focus-visible:after:outline-solid"
+      >
+        {title}
+      </a>
+      <span class="hook mt-1 block text-[0.8em] text-pretty text-muted">— {hook}</span>
+    </h3>
+
+    <p class="mt-4 text-muted">{summary}</p>
+
+    <ul class="mt-6 flex flex-wrap gap-2" aria-label="Tech used">
+      {
+        tech.map((t) => (
+          <li>
+            <Tag label={t} />
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="relative z-10 mt-auto flex flex-wrap gap-x-6 gap-y-2 pt-8 font-mono text-sm">
+      {
+        live && (
+          <a href={live} class="link-underline" target="_blank" rel="noopener noreferrer">
+            Live <span aria-hidden="true" class="nudge nudge-ne">↗</span>
+            <span class="sr-only">{title} (opens in a new tab)</span>
+          </a>
+        )
+      }
+      {
+        repo && (
+          <a href={repo} class="link-underline" target="_blank" rel="noopener noreferrer">
+            Code <span aria-hidden="true" class="nudge nudge-ne">↗</span>
+            <span class="sr-only">{title} source on GitHub (opens in a new tab)</span>
+          </a>
+        )
+      }
+      <a href={href} class="link-underline" tabindex="-1" aria-hidden="true">
+        Case study <span class="nudge nudge-r">→</span>
+      </a>
+    </div>
+  </div>
+</article>

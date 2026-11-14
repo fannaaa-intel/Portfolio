@@ -1,0 +1,81 @@
+---
+import { Image } from "astro:assets";
+import profile from "../assets/profile.jpg";
+import RotatingBadge from "./RotatingBadge.astro";
+import { site } from "../data/site";
+import { hookInitial, hookLastLine } from "../lib/hook";
+
+const github = site.socials.find((s) => s.label === "GitHub");
+---
+
+<section aria-label="Introduction" class="container-page pt-12 pb-20 md:pt-24 md:pb-28">
+  <div class="grid items-center gap-14 md:grid-cols-[1fr_auto] md:gap-16">
+    <!-- Text -->
+    <div class="min-w-0">
+      <p class="mono-label">{site.title} — {site.locationShort}</p>
+
+      <h1 class="mt-5 text-[clamp(2.5rem,7vw,5.5rem)]" set:html={hookInitial(site.name)} />
+
+      <div class="dim mt-6 max-w-md">{site.since}</div>
+
+      <p class="mt-8 text-[clamp(1.5rem,3vw,2.25rem)] leading-tight font-medium tracking-tight">
+        <Fragment set:html={hookLastLine(site.tagline)} /><span
+          class="cursor-blink ml-0.5 font-mono font-normal"
+          aria-hidden="true">▍</span
+        >
+      </p>
+
+      <p class="measure mt-5 text-muted">{site.intro}</p>
+
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href="#projects" class="btn btn-solid">View Projects <span aria-hidden="true" class="nudge nudge-r">→</span></a>
+        <a href={site.resume} class="btn" download="Mark_Reduca_CV.pdf">
+          Download CV <span aria-hidden="true" class="nudge nudge-d">↓</span>
+        </a>
+        {
+          github && (
+            <a href={github.href} class="btn" target="_blank" rel="noopener noreferrer">
+              GitHub <span aria-hidden="true" class="nudge nudge-ne">↗</span>
+              <span class="sr-only">(opens in a new tab)</span>
+            </a>
+          )
+        }
+      </div>
+
+      {
+        site.availableForWork && (
+          <p class="mono-label mt-8 flex items-center gap-2.5">
+            <span aria-hidden="true" class="pulse-dot inline-block size-2 rounded-full bg-fg" />
+            Available for freelance work
+          </p>
+        )
+      }
+    </div>
+
+    <!-- Photo: above the text on mobile, right on desktop -->
+    <div class="relative order-first mx-auto w-52 sm:w-60 md:order-last md:w-72 lg:w-80">
+      <figure class="corners group">
+        <div class="overflow-hidden border border-border bg-surface">
+          <Image
+            src={profile}
+            alt={`Portrait of ${site.name}`}
+            widths={[240, 320, 480, 640]}
+            sizes="(min-width: 1024px) 320px, (min-width: 768px) 288px, (min-width: 640px) 240px, 208px"
+            loading="eager"
+            fetchpriority="high"
+            class="aspect-square w-full scale-[1.06] object-cover object-[50%_22%] grayscale transition-[filter] duration-500 group-hover:grayscale-0"
+          />
+        </div>
+      </figure>
+      {
+        site.availableForWork && (
+          <RotatingBadge
+            class="absolute -bottom-9 -left-9 md:-bottom-12 md:-left-12"
+            text={site.availabilityBadge}
+            label="Available for work"
+          />
+        )
+      }
+    </div>
+  </div>
+</section>

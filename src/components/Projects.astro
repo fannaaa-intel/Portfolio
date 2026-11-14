@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+import SectionHeader from "./SectionHeader.astro";
+import ProjectCard from "./ProjectCard.astro";
+import { site } from "../data/site";
+
+const projects = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+const github = site.socials.find((s) => s.label === "GitHub");
+---
+
+<section id="projects" aria-labelledby="projects-title" class="container-page reveal py-20 md:py-28">
+  <SectionHeader index="03" label="Projects" title="Selected *work*." id="projects-title" />
+
+  <div class="grid gap-6 md:grid-cols-2 md:gap-8">
+    {projects.map((project) => <ProjectCard project={project} />)}
+  </div>
+
+  {
+    github && (
+      <p class="mt-10 font-mono text-sm text-muted">
+        More on{" "}
+        <a href={github.href} class="link-underline text-fg" target="_blank" rel="noopener noreferrer">
+          GitHub <span aria-hidden="true" class="nudge nudge-ne">↗</span>
+          <span class="sr-only">(opens in a new tab)</span>
+        </a>
+      </p>
+    )
+  }
+</section>

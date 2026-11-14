@@ -1,0 +1,36 @@
+---
+/**
+ * Decorative ticker strip. Content is duplicated for a seamless loop,
+ * so the whole strip is hidden from assistive tech — the same words
+ * must appear elsewhere on the page as real content.
+ */
+import Asterisk from "./Asterisk.astro";
+import TechIcon from "./TechIcon.astro";
+
+interface Props {
+  items: string[];
+  class?: string;
+}
+
+const { items, class: className = "" } = Astro.props;
+---
+
+<div aria-hidden="true" class:list={["marquee border-y border-border py-4", className]}>
+  <div class="marquee-track">
+    {
+      [0, 1].map(() => (
+        <div>
+          {items.map((item) => (
+            <>
+              <span class="flex items-center gap-2.5 font-mono text-sm tracking-wider uppercase">
+                <TechIcon name={item} class="size-4" />
+                {item}
+              </span>
+              <Asterisk class="size-3.5 text-muted" />
+            </>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>

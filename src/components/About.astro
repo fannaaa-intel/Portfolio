@@ -1,0 +1,26 @@
+---
+import SectionHeader from "./SectionHeader.astro";
+import { about } from "../data/site";
+---
+
+<section id="about" aria-labelledby="about-title" class="container-page reveal py-20 md:py-28">
+  <SectionHeader index="01" label="About" title={about.title} id="about-title" />
+
+  <div class="grid gap-12 md:grid-cols-[1fr_17rem] md:gap-16">
+    <div class="measure space-y-6">
+      {about.paragraphs.map((p) => <p>{p}</p>)}
+      <p class="hook text-2xl text-muted md:text-3xl">{about.closing}</p>
+    </div>
+
+    <dl class="h-fit divide-y divide-border border-y border-border font-mono text-sm">
+      {
+        about.facts.map((fact) => (
+          <div class="flex flex-col gap-1 py-4">
+            <dt class="text-muted">{fact.label} —</dt>
+            <dd>{fact.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>

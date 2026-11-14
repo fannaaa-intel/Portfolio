@@ -1,0 +1,45 @@
+---
+/**
+ * Monochrome tech logo (inline SVG). Tools without a Simple Icons mark get a
+ * solid square with the name knocked out (same style as the JS / TS marks).
+ * Everything uses currentColor, so it follows the theme and card inversion.
+ * Decorative: the visible tool name sits next to it.
+ */
+import { getTechIcon } from "../lib/techIcons";
+
+interface Props {
+  name: string;
+  class?: string;
+}
+
+const { name, class: className = "size-6" } = Astro.props;
+const icon = getTechIcon(name);
+const maskId = `mono-${name.toLowerCase().replace(/[^a-z0-9]/g, "")}-${Math.random().toString(36).slice(2, 7)}`;
+const fontSize = name.length <= 2 ? 11 : name.length === 3 ? 8.5 : 6.5;
+---
+
+{
+  icon ? (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class={className}>
+      <path d={icon.path} />
+    </svg>
+  ) : (
+    <svg viewBox="0 0 24 24" aria-hidden="true" class={className}>
+      <mask id={maskId}>
+        <rect width="24" height="24" fill="white" />
+        <text
+          x="21"
+          y="20.5"
+          text-anchor="end"
+          font-family="var(--font-mono)"
+          font-weight="700"
+          font-size={fontSize}
+          fill="black"
+        >
+          {name}
+        </text>
+      </mask>
+      <rect width="24" height="24" fill="currentColor" mask={`url(#${maskId})`} />
+    </svg>
+  )
+}

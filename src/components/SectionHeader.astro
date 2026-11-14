@@ -1,0 +1,29 @@
+---
+import { hook } from "../lib/hook";
+
+interface Props {
+  /** "01" */
+  index: string;
+  /** "About" */
+  label: string;
+  /** Section title; *asterisks* mark the serif hook */
+  title: string;
+  /** id for the <h2>, referenced by the section's aria-labelledby */
+  id: string;
+}
+
+const { index, label, title, id } = Astro.props;
+---
+
+<header class="relative isolate mb-12 md:mb-16">
+  <span
+    aria-hidden="true"
+    class="numeral-outline pointer-events-none absolute -top-14 right-0 -z-10 text-[7rem] md:-top-10 md:text-[11rem]"
+  >
+    {index}
+  </span>
+  <p class="mono-label">
+    <span class="text-fg">{index}</span> / {label}
+  </p>
+  <h2 id={id} class="mt-4 max-w-3xl text-[clamp(2rem,5vw,3.5rem)]" set:html={hook(title)} />
+</header>

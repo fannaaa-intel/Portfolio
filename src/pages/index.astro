@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Nav from "../components/Nav.astro";
+import Hero from "../components/Hero.astro";
+import Marquee from "../components/Marquee.astro";
+import About from "../components/About.astro";
+import Stack from "../components/Stack.astro";
+import Projects from "../components/Projects.astro";
+import Experience from "../components/Experience.astro";
+import Contact from "../components/Contact.astro";
+import Footer from "../components/Footer.astro";
+import { stack } from "../data/site";
+
+const tickerItems = stack.groups.flatMap((group) => group.items);
+---
+
+<BaseLayout>
+  <Nav />
+  <main id="main">
+    <Hero />
+    <Marquee items={tickerItems} />
+    <About />
+    <div class="container-page"><hr class="border-border" /></div>
+    <Stack />
+    <div class="container-page"><hr class="border-border" /></div>
+    <Projects />
+    <div class="container-page"><hr class="border-border" /></div>
+    <Experience />
+    <div class="container-page"><hr class="border-border" /></div>
+    <Contact />
+  </main>
+  <Footer />
+</BaseLayout>
