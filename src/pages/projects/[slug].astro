@@ -161,13 +161,17 @@ const index = pad(order);
             </p>
           </div>
           <div
+            data-demo
             class:list={[
               "mt-8",
-              video.orientation === "portrait" &&
-                "grid items-end gap-8 md:grid-cols-[minmax(0,20rem)_1fr] md:gap-12",
+              video.orientation === "portrait"
+                ? "grid items-center gap-10 md:grid-cols-[20rem_1fr] md:gap-16"
+                : "grid gap-8",
             ]}
           >
-            <figure class="corners">
+            <figure
+              class:list={["corners", video.orientation === "portrait" && "mx-auto w-full max-w-[20rem] md:mx-0"]}
+            >
               <video
                 controls
                 playsinline
@@ -178,22 +182,55 @@ const index = pad(order);
                 aria-label={`${title} demo video`}
                 class:list={[
                   "block w-full border border-border bg-black",
-                  video.orientation === "portrait" ? "mx-auto aspect-[9/16] max-w-[20rem]" : "aspect-video",
+                  video.orientation === "portrait" ? "aspect-[9/16]" : "aspect-video",
                 ]}
               >
                 <source src={video.src} type="video/mp4" />
                 <a href={video.src}>Download the {title} demo video</a>
               </video>
             </figure>
-            {video.description && (
-              <p
-                class:list={[
-                  "measure text-muted",
-                  video.orientation === "portrait" ? "text-lg leading-relaxed md:pb-4" : "mt-4",
-                ]}
-              >
-                {video.description}
-              </p>
+
+            {(video.description || video.chapters) && (
+              <div class="min-w-0">
+                {video.description && (
+                  <p class:list={["measure text-muted", video.orientation === "portrait" && "text-lg leading-relaxed"]}>
+                    {video.description}
+                  </p>
+                )}
+                {video.chapters && (
+                  <>
+                    <p class:list={["mono-label", video.description && "mt-8"]}>Jump to</p>
+                    <ol
+                      class:list={[
+                        "mt-3 border-t border-border font-mono text-sm",
+                        video.orientation === "landscape" &&
+                          "sm:grid sm:grid-flow-col sm:grid-cols-2 sm:grid-rows-(--chapter-rows) sm:gap-x-10",
+                      ]}
+                      style={`--chapter-rows: repeat(${Math.ceil(video.chapters.length / 2)}, auto)`}
+                      aria-label="Video chapters"
+                    >
+                      {video.chapters.map((c) => {
+                        const [m, s] = c.at.split(":").map(Number);
+                        return (
+                          <li class="border-b border-border">
+                            <button
+                              type="button"
+                              data-seek={m * 60 + s}
+                              class="group flex w-full items-baseline gap-4 py-3 text-left text-muted transition-colors hover:text-fg aria-[current=true]:text-fg"
+                            >
+                              <span class="w-10 shrink-0 tabular-nums">{c.at}</span>
+                              <span class="flex-1">{c.label}</span>
+                              <span aria-hidden="true" class="nudge nudge-r opacity-0 transition-opacity group-hover:opacity-100 group-aria-[current=true]:opacity-100">
+                                →
+                              </span>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ol>
+                  </>
+                )}
+              </div>
             )}
           </div>
         </section>
@@ -276,3 +313,38 @@ const index = pad(order);
 
   <Footer />
 </BaseLayout>
+
+<script>
+  // Chapter buttons: seek the demo video and mark the chapter that's playing.
+  for (const demo of document.querySelectorAll<HTMLElement>("[data-demo]")) {
+    const video = demo.querySelector("video");
+    const buttons = [...demo.querySelectorAll<HTMLButtonElement>("[data-seek]")];
+    if (!video || buttons.length === 0) continue;
+
+    const starts = buttons.map((b) => Number(b.dataset.seek));
+    const mark = () => {
+      let active = -1;
+      starts.forEach((t, i) => {
+        if (video.currentTime + 0.25 >= t) active = i;
+      });
+      buttons.forEach((b, i) => b.setAttribute("aria-current", String(i === active && video.currentTime > 0)));
+    };
+
+    buttons.forEach((b, i) =>
+      b.addEventListener("click", () => {
+        const seek = () => {
+          video.currentTime = starts[i];
+          video.play().catch(() => {});
+        };
+        // preload="none": metadata must load before seeking works
+        if (video.readyState >= 1) seek();
+        else {
+          video.addEventListener("loadedmetadata", seek, { once: true });
+          video.load();
+        }
+      }),
+    );
+    video.addEventListener("timeupdate", mark);
+    video.addEventListener("seeked", mark);
+  }
+</script>

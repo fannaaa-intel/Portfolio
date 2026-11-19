@@ -40,6 +40,10 @@ const projects = defineCollection({
           /** Shown as a label, e.g. "1:14" */
           duration: z.string().optional(),
           description: z.string().optional(),
+          /** Clickable chapter list; `at` is "m:ss" */
+          chapters: z
+            .array(z.object({ at: z.string().regex(/^\d+:[0-5]\d$/, 'use "m:ss"'), label: z.string() }))
+            .optional(),
         })
         .optional(),
       status: z.enum(["Live", "Completed", "In development"]),
