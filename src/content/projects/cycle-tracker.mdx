@@ -1,0 +1,95 @@
+---
+title: Cycle Tracker
+slug: cycle-tracker
+fullName: Cycle Tracker — Private Period Tracker for Irregular Cycles
+summary: A private, offline period tracker that gives honest predictions for irregular cycles and keeps every entry encrypted on the phone.
+hook: private by design.
+tech: [React Native, Expo, TypeScript, SQLite]
+role: Solo developer
+year: 2026
+featured: false
+order: 4
+repo: https://github.com/fannaaa-intel/IrregTracker
+cover: ../../assets/projects/cycle-tracker.png
+coverAlt: Three Cycle Tracker screens side by side — the welcome screen, Home with "Day 2 of this cycle" and the week strip, and the November calendar with two period days marked
+video:
+  src: /videos/cycle-tracker-promo.mp4
+  poster: /videos/cycle-tracker-promo-poster.jpg
+  orientation: landscape
+  duration: "1:23"
+  description: A short promo I designed and animated in code, with motion graphics, camera moves and an AI voice-over.
+  chapters:
+    - at: "0:00"
+      label: The problem
+    - at: "0:15"
+      label: Meet Cycle Tracker
+    - at: "0:23"
+      label: One-tap logging
+    - at: "0:30"
+      label: Home
+    - at: "0:35"
+      label: Honest predictions
+    - at: "0:48"
+      label: Calendar
+    - at: "0:54"
+      label: Symptoms
+    - at: "1:00"
+      label: Gentle reminders
+    - at: "1:05"
+      label: Private by design
+gallery:
+  - src: ../../assets/projects/cycle-tracker/welcome.png
+    alt: Welcome card reading "A calm place for your cycle", with a cycle ring and the note "Not a medical device and not contraception"
+    caption: Welcome
+  - src: ../../assets/projects/cycle-tracker/symptoms-intro.png
+    alt: Welcome card "Notice how you feel" about logging cramps, bloating and other symptoms with a tap
+    caption: Notice how you feel
+  - src: ../../assets/projects/cycle-tracker/privacy-intro.png
+    alt: Welcome card "Private by design" saying everything stays on the phone, encrypted, with no account, ads or tracking
+    caption: Private by design
+  - src: ../../assets/projects/cycle-tracker/home.png
+    alt: Home screen with a week strip, a "Day 2 of this cycle" ring, an Edit today button and the next-period card
+    caption: Home
+  - src: ../../assets/projects/cycle-tracker/next-period.png
+    alt: Next period card saying the app is still learning and needs 3 more complete cycles, above the cycle phase card and today's note
+    caption: Honest predictions
+  - src: ../../assets/projects/cycle-tracker/calendar.png
+    alt: Month calendar with period and likely-next-period filters and two logged period days
+    caption: Calendar
+  - src: ../../assets/projects/cycle-tracker/month-at-a-glance.png
+    alt: Calendar key explaining each mark, and a "November 2026 at a glance" summary of period and symptoms
+    caption: Month at a glance
+  - src: ../../assets/projects/cycle-tracker/settings.png
+    alt: Settings for appearance, cycle reminders with discreet lock-screen text, and fertile days
+    caption: Settings
+  - src: ../../assets/projects/cycle-tracker/kind-notes.png
+    alt: Kind notes setting for a gentle daily message, with time options and an example note
+    caption: Kind notes
+  - src: ../../assets/projects/cycle-tracker/about.png
+    alt: About card stating the app is not a medical device or contraception, and suggesting a doctor for any worries
+    caption: About
+status: Completed
+---
+
+## Problem
+
+Most period apps assume a regular cycle. They show one "due date" that is often wrong for irregular cycles, and many send sensitive health data to a server or require an account.
+
+## Solution
+
+An offline Android app that logs a period in a few seconds, predicts the next one as a range with an honest confidence level, and keeps all data encrypted on the phone. There are no accounts, no cloud and no analytics.
+
+## What I built
+
+- **Fast logging:** tap a calendar day to set flow, backfill past months by selecting several days at once, and undo any change
+- **Honest predictions:** a next-period window with low / medium / high confidence, "still learning" until there are three full cycles, and cycles tagged for illness, travel or stress left out
+- **Irregular-cycle care:** late-period handling, cycle phases, fertile-day ranges that switch off when cycles vary too much, and optional ovulation test logging
+- **Health notes:** symptoms, daily notes, gentle flags for unusual cycles, symptom patterns and an on-screen summary to show a doctor
+- **History:** cycle stats (median, shortest, longest, variation), a cycle-length chart and a cycle list
+- **Privacy:** a SQLCipher-encrypted database with its key kept only in secure storage, an optional fingerprint / PIN lock that also blocks screenshots, encrypted backups (AES-256-GCM) and delete-all
+- **App:** local reminders with discreet wording, dark mode that passes WCAG AA, and an accessibility pass
+- **Under the hood:** prediction and flag logic written as pure, test-first functions, with 64 test files
+
+## Outcome
+
+Shipped as an installable Android APK and in daily use, with over-the-air updates through EAS Update.
