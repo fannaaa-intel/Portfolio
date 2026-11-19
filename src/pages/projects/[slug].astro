@@ -22,7 +22,7 @@ interface Props {
 }
 
 const { project, next } = Astro.props;
-const { title, fullName, summary, hook, tech, role, year, order, live, repo, cover, coverAlt, status } =
+const { title, fullName, summary, hook, tech, role, year, order, live, repo, cover, coverAlt, gallery, status } =
   project.data;
 const { Content } = await render(project);
 const index = pad(order);
@@ -146,6 +146,42 @@ const index = pad(order);
         <Content />
       </article>
     </div>
+
+    <!-- Screens -->
+    {
+      gallery && gallery.length > 0 && (
+        <section aria-labelledby="screens-heading" class="container-page pb-24">
+          <div class="flex items-end justify-between gap-4 border-t border-border pt-8">
+            <h2 id="screens-heading" class="text-[clamp(1.625rem,3vw,2.25rem)]">Screens</h2>
+            <p class="mono-label">
+              {gallery.length} screens<span class="lg:hidden"> · swipe →</span>
+            </p>
+          </div>
+          <ul
+            class="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 md:gap-6 lg:grid lg:grid-cols-5 lg:gap-x-6 lg:gap-y-10 lg:overflow-visible lg:pb-0"
+            aria-label={`${title} screenshots`}
+            tabindex="0"
+          >
+            {gallery.map((shot, i) => (
+              <li class="w-[13.5rem] shrink-0 snap-start md:w-[15rem] lg:w-auto">
+                <figure class="group">
+                  <Image
+                    src={shot.src}
+                    alt={shot.alt}
+                    widths={[240, 480, 720]}
+                    sizes="(min-width: 1024px) 20vw, (min-width: 768px) 240px, 216px"
+                    class="w-full rounded-[1.25rem] border border-border grayscale transition-[filter] duration-500 group-hover:grayscale-0"
+                  />
+                  <figcaption class="mono-label mt-3">
+                    <span class="text-fg">{pad(i + 1)}</span> {shot.caption ?? shot.alt}
+                  </figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
 
     <!-- Next project -->
     <nav aria-label="Next project" class="container-page pb-24">

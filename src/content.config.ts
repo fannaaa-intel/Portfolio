@@ -27,6 +27,10 @@ const projects = defineCollection({
       /** Screenshot in src/assets/projects/. Omit to show the dot-grid placeholder. */
       cover: image().optional(),
       coverAlt: z.string().optional(),
+      /** Extra screenshots shown as a strip on the case study page (phone screens work best). */
+      gallery: z
+        .array(z.object({ src: image(), alt: z.string(), caption: z.string().optional() }))
+        .optional(),
       status: z.enum(["Live", "Completed", "In development"]),
     }),
 });
