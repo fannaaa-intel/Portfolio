@@ -31,6 +31,17 @@ const projects = defineCollection({
       gallery: z
         .array(z.object({ src: image(), alt: z.string(), caption: z.string().optional() }))
         .optional(),
+      /** Demo video served from public/, e.g. "/videos/ledgerly-demo.mp4". */
+      video: z
+        .object({
+          src: z.string().startsWith("/"),
+          poster: z.string().startsWith("/"),
+          orientation: z.enum(["portrait", "landscape"]).default("landscape"),
+          /** Shown as a label, e.g. "1:14" */
+          duration: z.string().optional(),
+          description: z.string().optional(),
+        })
+        .optional(),
       status: z.enum(["Live", "Completed", "In development"]),
     }),
 });

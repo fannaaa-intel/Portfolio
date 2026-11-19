@@ -22,8 +22,10 @@ interface Props {
 }
 
 const { project, next } = Astro.props;
-const { title, fullName, summary, hook, tech, role, year, order, live, repo, cover, coverAlt, gallery, status } =
+const { title, fullName, summary, hook, tech, role, year, order, live, repo, cover, coverAlt, gallery, video, status } =
   project.data;
+// Phone screens get a narrow strip / 5-up grid; desktop screenshots get wider tiles / 2-up grid.
+const wideGallery = gallery?.[0] ? gallery[0].src.width > gallery[0].src.height : false;
 const { Content } = await render(project);
 const index = pad(order);
 ---
@@ -147,6 +149,57 @@ const index = pad(order);
       </article>
     </div>
 
+    <!-- Demo video -->
+    {
+      video && (
+        <section aria-labelledby="demo-heading" class="container-page pb-24">
+          <div class="flex items-end justify-between gap-4 border-t border-border pt-8">
+            <h2 id="demo-heading" class="text-[clamp(1.625rem,3vw,2.25rem)]">Demo</h2>
+            <p class="mono-label">
+              {video.duration && <span class="text-fg">{video.duration}</span>}
+              {video.duration && " · "}sound on
+            </p>
+          </div>
+          <div
+            class:list={[
+              "mt-8",
+              video.orientation === "portrait" &&
+                "grid items-end gap-8 md:grid-cols-[minmax(0,20rem)_1fr] md:gap-12",
+            ]}
+          >
+            <figure class="corners">
+              <video
+                controls
+                playsinline
+                preload="none"
+                poster={video.poster}
+                width={video.orientation === "portrait" ? 720 : 1280}
+                height={video.orientation === "portrait" ? 1280 : 720}
+                aria-label={`${title} demo video`}
+                class:list={[
+                  "block w-full border border-border bg-black",
+                  video.orientation === "portrait" ? "mx-auto aspect-[9/16] max-w-[20rem]" : "aspect-video",
+                ]}
+              >
+                <source src={video.src} type="video/mp4" />
+                <a href={video.src}>Download the {title} demo video</a>
+              </video>
+            </figure>
+            {video.description && (
+              <p
+                class:list={[
+                  "measure text-muted",
+                  video.orientation === "portrait" ? "text-lg leading-relaxed md:pb-4" : "mt-4",
+                ]}
+              >
+                {video.description}
+              </p>
+            )}
+          </div>
+        </section>
+      )
+    }
+
     <!-- Screens -->
     {
       gallery && gallery.length > 0 && (
@@ -158,20 +211,38 @@ const index = pad(order);
             </p>
           </div>
           <ul
-            class="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 md:gap-6 lg:grid lg:grid-cols-5 lg:gap-x-6 lg:gap-y-10 lg:overflow-visible lg:pb-0"
+            class:list={[
+              "mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 md:gap-6 lg:grid lg:gap-x-6 lg:gap-y-10 lg:overflow-visible lg:pb-0",
+              wideGallery ? "lg:grid-cols-2" : "lg:grid-cols-5",
+            ]}
             aria-label={`${title} screenshots`}
             tabindex="0"
           >
             {gallery.map((shot, i) => (
-              <li class="w-[13.5rem] shrink-0 snap-start md:w-[15rem] lg:w-auto">
+              <li
+                class:list={[
+                  "shrink-0 snap-start lg:w-auto",
+                  wideGallery ? "w-[85%] md:w-[30rem]" : "w-[13.5rem] md:w-[15rem]",
+                ]}
+              >
                 <figure class="group">
-                  <Image
-                    src={shot.src}
-                    alt={shot.alt}
-                    widths={[240, 480, 720]}
-                    sizes="(min-width: 1024px) 20vw, (min-width: 768px) 240px, 216px"
-                    class="w-full rounded-[1.25rem] border border-border grayscale transition-[filter] duration-500 group-hover:grayscale-0"
-                  />
+                  <a href={shot.src.src} target="_blank" rel="noopener" class="block cursor-zoom-in">
+                    <Image
+                      src={shot.src}
+                      alt={shot.alt}
+                      widths={wideGallery ? [480, 720, 1080, 1366] : [240, 480, 720]}
+                      sizes={
+                        wideGallery
+                          ? "(min-width: 1024px) 50vw, (min-width: 768px) 480px, 85vw"
+                          : "(min-width: 1024px) 20vw, (min-width: 768px) 240px, 216px"
+                      }
+                      class:list={[
+                        "w-full border border-border grayscale transition-[filter] duration-500 group-hover:grayscale-0",
+                        wideGallery ? "rounded-md" : "rounded-[1.25rem]",
+                      ]}
+                    />
+                    <span class="sr-only"> (full size, opens in a new tab)</span>
+                  </a>
                   <figcaption class="mono-label mt-3">
                     <span class="text-fg">{pad(i + 1)}</span> {shot.caption ?? shot.alt}
                   </figcaption>
