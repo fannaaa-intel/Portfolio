@@ -73,7 +73,7 @@ const index = pad(order);
               widths={[640, 960, 1280, 1600]}
               sizes="(min-width: 1200px) 1100px, 100vw"
               loading="eager"
-              class="aspect-[16/9] w-full border border-border object-cover grayscale transition-[filter] duration-500 group-hover:grayscale-0"
+              class="aspect-[16/9] w-full border border-border object-cover can-hover:grayscale transition-[filter] duration-500 group-hover:grayscale-0"
             />
           ) : (
             <div
@@ -274,7 +274,7 @@ const index = pad(order);
                           : "(min-width: 1024px) 20vw, (min-width: 768px) 240px, 216px"
                       }
                       class:list={[
-                        "w-full border border-border grayscale transition-[filter] duration-500 group-hover:grayscale-0",
+                        "w-full border border-border can-hover:grayscale transition-[filter] duration-500 group-hover:grayscale-0",
                         wideGallery ? "rounded-md" : "rounded-[1.25rem]",
                       ]}
                     />

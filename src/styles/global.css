@@ -7,6 +7,10 @@
 ------------------------------------------------------------------ */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+/* Devices with a real hover (mouse/trackpad). Touch screens can't hover,
+   so effects like grayscale-until-hover are skipped there. */
+@custom-variant can-hover (@media (hover: hover) and (pointer: fine));
+
 /* ------------------------------------------------------------------
    Tokens — monochrome only
 ------------------------------------------------------------------ */
@@ -248,8 +252,16 @@
       inset 250ms var(--ease-out-soft);
   }
 
-  .corners-hover:hover::before,
-  .corners-hover:focus-within::before {
+  /* Hover only on mouse/trackpad devices, so a tap on a phone doesn't
+     leave the effect stuck on. Keyboard focus still shows it. */
+  @media (hover: hover) {
+    .corners-hover:hover::before {
+      opacity: 1;
+      inset: -5px;
+    }
+  }
+
+  .corners-hover:has(:focus-visible)::before {
     opacity: 1;
     inset: -5px;
   }
@@ -321,15 +333,31 @@
       color 200ms ease;
   }
 
-  .btn:hover,
   .btn-solid {
     background-color: var(--fg);
     color: var(--bg);
   }
 
-  .btn-solid:hover {
+  .btn:focus-visible {
+    background-color: var(--fg);
+    color: var(--bg);
+  }
+
+  .btn-solid:focus-visible {
     background-color: transparent;
     color: var(--fg);
+  }
+
+  @media (hover: hover) {
+    .btn:hover {
+      background-color: var(--fg);
+      color: var(--bg);
+    }
+
+    .btn-solid:hover {
+      background-color: transparent;
+      color: var(--fg);
+    }
   }
 
   /* Invert-on-hover card. Re-maps the tokens inside the card, so muted
@@ -342,17 +370,31 @@
       color 200ms ease;
   }
 
-  .card-invert:hover,
-  .card-invert:focus-within {
+  /* Inverted state: mouse hover, or keyboard focus inside the card.
+     Not on touch, where a tap would leave the card stuck black after
+     navigating back. */
+  .card-invert:has(:focus-visible) {
     background-color: var(--fg);
     color: var(--bg);
     --muted: color-mix(in srgb, var(--bg) 72%, var(--fg));
     --border: color-mix(in srgb, var(--bg) 24%, var(--fg));
   }
 
-  .card-invert:hover .card-media img,
-  .card-invert:focus-within .card-media img {
+  .card-invert:has(:focus-visible) .card-media img {
     filter: grayscale(0);
+  }
+
+  @media (hover: hover) {
+    .card-invert:hover {
+      background-color: var(--fg);
+      color: var(--bg);
+      --muted: color-mix(in srgb, var(--bg) 72%, var(--fg));
+      --border: color-mix(in srgb, var(--bg) 24%, var(--fg));
+    }
+
+    .card-invert:hover .card-media img {
+      filter: grayscale(0);
+    }
   }
 
   /* Case-study body (rendered MDX). h2s get "01 / " mono indexes. */

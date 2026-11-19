@@ -99,7 +99,7 @@ logo gets a solid square with its name knocked out (like C#).
 
 **Screenshots:** drop an image into `src/assets/projects/` and uncomment `cover` / `coverAlt`.
 Without a cover, the card shows a dot-grid placeholder. Images are optimized at build time and
-shown in grayscale until hovered.
+shown in grayscale until hovered (on touch screens they stay in full color).
 
 Only one project should have `featured: true`; it gets the full-width card.
 
